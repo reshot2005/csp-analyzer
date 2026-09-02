@@ -1,0 +1,63 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "csp-analyzer"
+version = "0.1.0"
+description = "Parse CSP; flag unsafe-inline/eval, missing directives."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+authors = [{ name = "Security Research Collection" }]
+keywords = ["security", "template"]
+dependencies = [
+    "secintel-core>=0.1.0",
+    "typer>=0.12",
+    "rich>=13.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "secintel-core[dev]>=0.1.0",
+    "pytest>=8.0",
+    "pytest-cov>=4.1",
+    "ruff>=0.4",
+    "mypy>=1.8",
+    "jsonschema>=4.21",
+]
+
+[project.scripts]
+csp-analyzer = "csp_analyzer.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/csp_analyzer"]
+
+[tool.hatch.build.targets.sdist]
+only-include = ["src/csp_analyzer", "sample_data", "scripts", "docs", "report", "README.md", "LICENSE"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "S", "C4"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]
+"src/csp_analyzer/cli.py" = ["B008"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+packages = ["csp_analyzer"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["csp_analyzer"]

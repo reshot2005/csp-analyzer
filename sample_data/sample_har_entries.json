@@ -1,0 +1,133 @@
+[
+  {
+    "startedDateTime": "2026-01-15T10:00:00.000Z",
+    "request": {
+      "method": "GET",
+      "url": "https://app.example.com/login",
+      "headers": [
+        {"name": "User-Agent", "value": "Mozilla/5.0"},
+        {"name": "Accept", "value": "text/html"}
+      ],
+      "queryString": [],
+      "cookies": [],
+      "postData": {"mimeType": "", "text": ""}
+    },
+    "response": {
+      "status": 200,
+      "headers": [
+        {"name": "Content-Type", "value": "text/html"},
+        {"name": "Set-Cookie", "value": "sessionid=abc123; Path=/"},
+        {"name": "Server", "value": "Apache/2.4.52 (Ubuntu)"}
+      ],
+      "cookies": [{"name": "sessionid", "value": "abc123"}]
+    }
+  },
+  {
+    "startedDateTime": "2026-01-15T10:00:05.000Z",
+    "request": {
+      "method": "POST",
+      "url": "https://app.example.com/api/login",
+      "headers": [
+        {"name": "Content-Type", "value": "application/json"},
+        {"name": "Origin", "value": "https://evil.example.com"}
+      ],
+      "queryString": [],
+      "cookies": [{"name": "sessionid", "value": "abc123"}],
+      "postData": {
+        "mimeType": "application/json",
+        "text": "{\"username\":\"admin\",\"password\":\"secret123\"}"
+      }
+    },
+    "response": {
+      "status": 200,
+      "headers": [
+        {"name": "Content-Type", "value": "application/json"},
+        {"name": "Set-Cookie", "value": "auth_token=eyJhbGciOiJIUzI1NiJ9; Secure; HttpOnly; SameSite=Strict; Path=/"},
+        {"name": "Access-Control-Allow-Origin", "value": "*"},
+        {"name": "Access-Control-Allow-Credentials", "value": "true"},
+        {"name": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, OPTIONS"}
+      ],
+      "cookies": []
+    }
+  },
+  {
+    "startedDateTime": "2026-01-15T10:00:08.000Z",
+    "request": {
+      "method": "GET",
+      "url": "https://app.example.com/api/profile",
+      "headers": [
+        {"name": "Origin", "value": "https://attacker.example.com"}
+      ],
+      "queryString": [],
+      "cookies": [{"name": "auth_token", "value": "eyJhbGciOiJIUzI1NiJ9"}],
+      "postData": {"mimeType": "", "text": ""}
+    },
+    "response": {
+      "status": 200,
+      "headers": [
+        {"name": "Content-Type", "value": "application/json"},
+        {"name": "Access-Control-Allow-Origin", "value": "https://attacker.example.com"},
+        {"name": "Access-Control-Allow-Credentials", "value": "true"}
+      ],
+      "cookies": []
+    }
+  },
+  {
+    "startedDateTime": "2026-01-15T10:00:10.000Z",
+    "request": {
+      "method": "GET",
+      "url": "https://app.example.com/dashboard",
+      "headers": [],
+      "queryString": [{"name": "token", "value": "eyJhbGciOiJIUzI1NiJ9"}],
+      "cookies": [{"name": "auth_token", "value": "eyJhbGciOiJIUzI1NiJ9"}],
+      "postData": {"mimeType": "", "text": ""}
+    },
+    "response": {
+      "status": 200,
+      "headers": [
+        {"name": "Content-Type", "value": "text/html"},
+        {"name": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains"},
+        {"name": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self'"}
+      ],
+      "cookies": []
+    }
+  },
+  {
+    "startedDateTime": "2026-01-15T10:00:12.000Z",
+    "request": {
+      "method": "GET",
+      "url": "https://app.example.com/legacy",
+      "headers": [],
+      "queryString": [],
+      "cookies": [],
+      "postData": {"mimeType": "", "text": ""}
+    },
+    "response": {
+      "status": 200,
+      "headers": [
+        {"name": "Content-Type", "value": "text/html"},
+        {"name": "Content-Security-Policy", "value": "default-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:"}
+      ],
+      "cookies": []
+    }
+  },
+  {
+    "startedDateTime": "2026-01-15T10:00:15.000Z",
+    "request": {
+      "method": "GET",
+      "url": "http://app.example.com/redirect?url=https://evil.com",
+      "headers": [],
+      "queryString": [{"name": "url", "value": "https://evil.com"}],
+      "cookies": [],
+      "postData": {"mimeType": "", "text": ""}
+    },
+    "response": {
+      "status": 302,
+      "headers": [
+        {"name": "Location", "value": "https://evil.com"},
+        {"name": "Content-Type", "value": "text/html"}
+      ],
+      "cookies": []
+    }
+  }
+]
